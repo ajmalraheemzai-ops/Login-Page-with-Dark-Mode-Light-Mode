@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #020202;
+    --bg-lit: #0f0f0f;
+    --lamp-off: #333;
+    --lamp-on: #ffffff;
+    --gold: #d4af37;
+    --glow-color: rgba(255, 255, 180, 0.4);
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-dark);
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.6s ease;
+    overflow: hidden;
+}
+
+body.lit {
+    background-color: var(--bg-lit);
+}
+
+.main-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 120px;
+    z-index: 2;
+}
+
+/* --- Lamp Styling --- */
+.lamp {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.shade {
+    width: 150px;
+    height: 75px;
+    background: var(--lamp-off);
+    border-radius: 75px 75px 0 0;
+    z-index: 5;
+    position: relative;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.bulb {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 15px;
+    background: transparent;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+/* Lighting Tweak: Glow and Flicker */
+body.lit .shade { background: var(--lamp-on); box-shadow: 0 -5px 30px rgba(255,255,255,0.1); }
+body.lit .bulb { 
+    background: #fff; 
+    box-shadow: 0 0 50px 10px #fff, 0 0 100px 30px var(--glow-color); 
+    animation: flicker 0.15s ease-in-out;
+}
+
+.stand { width: 10px; height: 180px; background: var(--lamp-off); transition: 0.3s; }
+body.lit .stand { background: #444; }
+
+.base { width: 100px; height: 15px; background: var(--lamp-off); border-radius: 8px 8px 0 0; transition: 0.3s; }
+body.lit .base { background: #333; }
+
+/* --- The Switch (Pull Chain) --- */
+.chain {
+    position: absolute;
+    top: 75px;
+    right: 35px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.1s;
+}
+
+.chain:active { transform: translateY(15px); }
+
+.string { width: 2px; height: 70px; background: #555; margin-left: 6px; }
+.handle { width: 14px; height: 14px; background: var(--gold); border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
+/* --- Light Beam Styling --- */
+.light-beam {
+    position: absolute;
+    top: 75px;
+    width: 350px;
+    height: 500px;
+    background: radial-gradient(circle at top, var(--glow-color) 0%, transparent 75%);
+    filter: blur(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+body.lit .light-beam { opacity: 0.5; }
+
+/* --- Login Card --- */
+.login-section {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+body.lit .login-section {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.card {
+    background: #1a1a1a;
+    padding: 40px;
+    border-radius: 24px;
+    width: 340px;
+    color: white;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+}
+
+.input-box { margin-bottom: 20px; }
+label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+input {
+    width: 100%;
+    padding: 12px;
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: white;
+    outline: none;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #d4af37, #b8860b);
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* --- Footer --- */
+footer {
+    position: absolute;
+    bottom: 25px;
+    color: #444;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+body.lit footer { opacity: 1; }
+footer span { color: var(--gold); font-weight: bold; }
+
+/* Animation Keyframes */
+@keyframes flicker {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+/* ===============================
+   Samsung Galaxy S23 Ultra Fix
+   Screen ~412px width
+   =============================== */
+@media (max-width: 430px) {
+
+    body {
+        height: auto;
+        overflow-x: hidden;
+        padding: 20px 0;
+    }
+
+    .main-wrapper {
+        flex-direction: column;
+        gap: 40px;
+        transform: scale(0.95);
+    }
+
+    /* Lamp scaling */
+    .lamp-container {
+        transform: scale(0.85);
+    }
+
+    .light-beam {
+        width: 260px;
+        height: 380px;
+        top: 65px;
+    }
+
+    /* Login card */
+    .login-section {
+        transform: translateY(30px);
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .card {
+        width: 90%;
+        max-width: 340px;
+        padding: 30px;
+    }
+
+    /* Inputs & button touch comfort */
+    input {
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 16px;
+        font-size: 15px;
+    }
+
+    /* Footer positioning */
+    footer {
+        position: relative;
+        margin-top: 30px;
+        bottom: auto;
+        text-align: center;
+        width: 100%;
+        font-size: 12px;
+    }
+}
